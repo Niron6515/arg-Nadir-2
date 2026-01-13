@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Behind the Hamlet</title>
+  <style>
+    body {
+      font-family: Georgia, serif;
+      background-color: #0f0f0f;
+      color: #e0e0e0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      padding: 30px;
+      border: 1px solid #444;
+      background-color: #161616;
+    }
+
+    h1 {
+      font-size: 1.5em;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .riddle {
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 1em;
+      margin-bottom: 10px;
+      background-color: #222;
+      color: #e0e0e0;
+      border: 1px solid #555;
+      text-transform: uppercase;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      font-size: 1em;
+      background-color: #333;
+      color: #e0e0e0;
+      border: 1px solid #666;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #444;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .error {
+      color: #c66;
+      margin-top: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Behind the Hamlet</h1>
+
+    <div class="riddle">
+      <p>
+        Four are called where hooves once stood,<br>
+        One too small to follow wood.<br>
+        The last arrives, a stranger new,<br>
+        Each remembered by a single hue.
+      </p>
+      <p>
+        Take their order, not their names,<br>
+        First letters bind their silent fates.<br>
+        Six in line no more, no less.<br>
+        Enter them to make progress.
+      </p>
+    </div>
+
+    <input type="text" id="passcode" placeholder="Enter six-letter code" maxlength="6">
+    <button onclick="checkCode()">Unlock</button>
+
+    <div id="error" class="error hidden">
+      That order is not correct.
+    </div>
+
+    <div id="secondRiddle" class="riddle hidden">
+      <hr>
+      <p>
+        Wait you are finished .<br>
+        Well I am not finished so...<br>
+        Wait a bit<br>
+        Did you cheat.
+      </p>
+      <p>
+        Wait<br>
+        wait<br>
+        Waiting
+      </p>
+    </div>
+  </div>
+
+  <script>
+    function checkCode() {
+      const input = document.getElementById("passcode").value.toUpperCase();
+      const error = document.getElementById("error");
+      const secondRiddle = document.getElementById("secondRiddle");
+
+      if (input === "ACVCJM") {
+        error.classList.add("hidden");
+        secondRiddle.classList.remove("hidden");
+      } else {
+        error.classList.remove("hidden");
+        secondRiddle.classList.add("hidden");
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,130 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Behind the Hamlet</title>
-  <style>
-    body {
-      font-family: Georgia, serif;
-      background-color: #0f0f0f;
-      color: #e0e0e0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unlock Secret</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-    .container {
-      max-width: 600px;
-      padding: 30px;
-      border: 1px solid #444;
-      background-color: #161616;
-    }
+        .container {
+            text-align: center;
+            background: #1e1e1e;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 300px;
+        }
 
-    h1 {
-      font-size: 1.5em;
-      margin-bottom: 15px;
-      text-align: center;
-    }
+        #pin-display {
+            font-size: 2rem;
+            letter-spacing: 10px;
+            margin-bottom: 20px;
+            height: 40px;
+            color: #00ffcc;
+        }
 
-    .riddle {
-      margin-bottom: 20px;
-      line-height: 1.6;
-    }
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      font-size: 1em;
-      margin-bottom: 10px;
-      background-color: #222;
-      color: #e0e0e0;
-      border: 1px solid #555;
-      text-transform: uppercase;
-    }
+        button {
+            padding: 15px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 8px;
+            background: #333;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
 
-    button {
-      width: 100%;
-      padding: 10px;
-      font-size: 1em;
-      background-color: #333;
-      color: #e0e0e0;
-      border: 1px solid #666;
-      cursor: pointer;
-    }
+        button:hover { background: #444; }
+        button:active { background: #00ffcc; color: black; }
 
-    button:hover {
-      background-color: #444;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .error {
-      color: #c66;
-      margin-top: 10px;
-      text-align: center;
-    }
-  </style>
+        #secret-content { display: none; }
+        
+        h1 { color: #00ffcc; margin-top: 0; }
+        
+        #timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #ff9f43;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Behind the Hamlet</h1>
 
-    <div class="riddle">
-      <p>
-        Four are called where hooves once stood,<br>
-        One too small to follow wood.<br>
-        The last arrives, a stranger new,<br>
-        Each remembered by a single hue.
-      </p>
-      <p>
-        Take their order, not their names,<br>
-        First letters bind their silent fates.<br>
-        Six in line no more, no less.<br>
-        Enter them to make progress.
-      </p>
+    <div id="lock-screen" class="container">
+        <h2>Enter PIN</h2>
+        <div id="pin-display">____</div>
+        <div class="keypad">
+            <button onclick="press(1)">1</button>
+            <button onclick="press(2)">2</button>
+            <button onclick="press(3)">3</button>
+            <button onclick="press(4)">4</button>
+            <button onclick="press(5)">5</button>
+            <button onclick="press(6)">6</button>
+            <button onclick="press(7)">7</button>
+            <button onclick="press(8)">8</button>
+            <button onclick="press(9)">9</button>
+            <button onclick="clearPin()">C</button>
+            <button onclick="press(0)">0</button>
+        </div>
     </div>
 
-    <input type="text" id="passcode" placeholder="Enter six-letter code" maxlength="6">
-    <button onclick="checkCode()">Unlock</button>
-
-    <div id="error" class="error hidden">
-      That order is not correct.
+    <div id="secret-content" class="container">
+        <h1>Well Done!</h1>
+        <p>Time remaining until the event:</p>
+        <div id="timer">Loading...</div>
     </div>
 
-    <div id="secondRiddle" class="riddle hidden">
-      <hr>
-      <p>
-        Wait you are finished .<br>
-        Well I am not finished so...<br>
-        Wait a bit<br>
-        Did you cheat.
-      </p>
-      <p>
-        Wait<br>
-        wait<br>
-        Waiting
-      </p>
-    </div>
-  </div>
+    <script>
+        const CORRECT_PIN = "6515";
+        const TARGET_DATE = new Date("April 13, 2026 21:30:00").getTime();
+        let currentInput = "";
 
-  <script>
-    function checkCode() {
-      const input = document.getElementById("passcode").value.toUpperCase();
-      const error = document.getElementById("error");
-      const secondRiddle = document.getElementById("secondRiddle");
+        function press(num) {
+            if (currentInput.length < 4) {
+                currentInput += num;
+                updateDisplay();
+                if (currentInput.length === 4) {
+                    checkPin();
+                }
+            }
+        }
 
-      if (input === "ACVCJM") {
-        error.classList.add("hidden");
-        secondRiddle.classList.remove("hidden");
-      } else {
-        error.classList.remove("hidden");
-        secondRiddle.classList.add("hidden");
-      }
-    }
-  </script>
+        function clearPin() {
+            currentInput = "";
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            const display = document.getElementById("pin-display");
+            display.innerText = currentInput.padEnd(4, "_");
+        }
+
+        function checkPin() {
+            if (currentInput === CORRECT_PIN) {
+                document.getElementById("lock-screen").style.display = "none";
+                document.getElementById("secret-content").style.display = "block";
+                startTimer();
+            } else {
+                alert("Incorrect PIN! Try again.");
+                clearPin();
+            }
+        }
+
+        function startTimer() {
+            const timerElement = document.getElementById("timer");
+
+            const update = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = TARGET_DATE - now;
+
+                if (distance < 0) {
+                    clearInterval(update);
+                    timerElement.innerHTML = "THE TIME HAS ARRIVED";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                timerElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            }, 1000);
+        }
+    </script>
 </body>
 </html>
